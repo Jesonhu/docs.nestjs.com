@@ -1,4 +1,4 @@
-### 自定义路由修饰符(Custom route decorators)
+### Custom route decorators
 
 Nest is built around a language feature called **decorators**. Decorators are a well-known concept in a lot of commonly used programming languages, but in the JavaScript world, they're still relatively new. In order to better understand how decorators work, we recommend reading [this article](https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841). Here's a simple definition:
 
@@ -8,7 +8,7 @@ Nest is built around a language feature called **decorators**. Decorators are a 
   you are trying to decorate. Decorators can be defined for either a class or a property.
 </blockquote>
 
-#### 参数修饰符(Param decorators)
+#### Param decorators
 
 Nest provides a set of useful **param decorators** that you can use together with the HTTP route handlers. Below is a list of the provided decorators and the plain Express (or Fastify) objects they represent
 
@@ -84,7 +84,7 @@ async findOne(user) {
 }
 ```
 
-#### 数据传递(Passing data)
+#### Passing data
 
 When the behavior of your decorator depends on some conditions, you can use the `data` parameter to pass an argument to the decorator's factory function. One use case for this is a custom decorator that extracts properties from the request object by key. Let's assume, for example, that our <a href="techniques/authentication#user-object">authentication layer</a> validates requests and attaches a user entity to the request object. The user entity for an authenticated request might look like:
 
@@ -133,7 +133,7 @@ async findOne(firstName) {
 
 You can use this same decorator with different keys to access different properties.  If the `user` object is deep or complex, this can make for easier and more readable request handler implementations.
 
-#### 与管道搭配(Working with pipes)
+#### Working with pipes
 
 Nest treats custom param decorators in the same fashion as the built-in ones (`@Body()`, `@Param()` and `@Query()`). This means that pipes are executed for the custom annotated parameters as well (in our examples, the `user` argument). Moreover, you can apply the pipe directly to the custom decorator:
 

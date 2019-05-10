@@ -1,4 +1,4 @@
-### 异常筛选(Exception filters)
+### Exception filters
 
 Nest comes with a built-in **exceptions layer** which is responsible for processing all unhandled exceptions across an application. When an exception is not handled by your application code, it is caught by this layer, which then automatically sends an appropriate user-friendly response.
 
@@ -15,7 +15,7 @@ Out of the box, this action is performed by a built-in **global exception filter
 }
 ```
 
-#### 基本的异常处理(Base exceptions)
+#### Base exceptions
 
 The built-in `HttpException` class is exposed from the `@nestjs/common` package.
 
@@ -62,7 +62,7 @@ Using the above, this is how the response would look:
 }
 ```
 
-#### 异常等级(Exceptions hierarchy)
+#### Exceptions hierarchy
 
 It is good practice to create your own **exceptions hierarchy**. This means that your custom HTTP exceptions should inherit from the base `HttpException` class. As a result, Nest will recognize your exceptions, and automatically take care of the error responses.  Let's implement such a custom exception:
 
@@ -85,7 +85,7 @@ async findAll() {
 }
 ```
 
-#### HTTP 异常(HTTP exceptions)
+#### HTTP exceptions
 
 In order to reduce the need to write boilerplate code, Nest provides a set of usable exceptions that inherit from the core `HttpException`. All of them are exposed from the `@nestjs/common` package:
 
@@ -106,7 +106,7 @@ In order to reduce the need to write boilerplate code, Nest provides a set of us
 - `ServiceUnavailableException`
 - `GatewayTimeoutException`
 
-#### 筛选器异常(Exception filters)
+#### Exception filters
 
 While the base (built-in) exception filter can automatically handle many cases for you, you may want **full control** over the exceptions layer. For example, you may want to add logging or use a different JSON schema based on some dynamic factors.  **Exception filters** are designed for exactly this purpose.
 
@@ -160,7 +160,7 @@ export class HttpExceptionFilter {
 
 The `@Catch(HttpException)` decorator binds the required metadata to the exception filter, telling Nest that this particular filter is looking for exceptions of type `HttpException` and nothing else. The `@Catch()` decorator may take a single parameter, or a comma-separated list.  This lets you set up the filter for several types of exceptions at once.
 
-#### 主机参数(Arguments host)
+#### Arguments host
 
 Let's look at the parameters of the `catch()` method. The `exception` parameter is the exception object currently being processed. The `host` parameter is an `ArgumentsHost` object. `ArgumentsHost` is a wrapper around the arguments that have been passed to the **original** request handler (where the exception originated). It contains a specific arguments array based on the type of the application (and platform which is being used). Here's what an `ArgumentsHost` looks like:
 
@@ -176,7 +176,7 @@ export interface ArgumentsHost {
 
 The `ArgumentsHost` supplies us with a set of convenience methods that help to pick the correct arguments from the underlying array, across different application contexts. In other words, `ArgumentsHost` is nothing more than an **array of arguments**. For example, when the filter is used within the HTTP application context, `ArgumentsHost` will contain a `[request, response]` array. However, when the current context is a web sockets application, it will contain a `[client, data]` array, as appropriate to that context. This approach enables you to access any argument that would eventually be passed to the original handler in your custom `catch()` method.
 
-#### 塞选取绑定(Binding filters)
+#### Binding filters
 
 Let's tie our new `HttpExceptionFilter` to the `CatsController`'s `create()` method.
 
@@ -265,7 +265,7 @@ export class ApplicationModule {}
 You can add as many filters with this technique as needed; simply add each to the providers array.
 
 
-#### 捕获所有(Catch everything)
+#### Catch everything
 
 In order to catch **every** unhandled exception (regardless of the exception type), leave the `@Catch()` decorator's parameter list empty, e.g., `@Catch()`.
 
@@ -294,7 +294,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
 In the example above the filter will catch each exception thrown, regardless of its type (class).
 
-#### 多重继承(Inheritance)
+#### Inheritance
 
 Typically, you'll create fully customized exception filters crafted to fulfill your application requirements. However, there might be use-cases when you would like to simply extend the built-in default **global exception filter**, and override the behavior based on certain factors.
 

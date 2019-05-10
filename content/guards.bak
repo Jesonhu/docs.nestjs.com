@@ -1,4 +1,4 @@
-### 守卫(Guards)
+### Guards
 
 A guard is a class annotated with the `@Injectable()` decorator. Guards should implement the `CanActivate` interface.
 
@@ -10,7 +10,7 @@ But middleware, by its nature, is dumb. It doesn't know which handler will be ex
 
 > info **Hint** Guards are executed **after** each middleware, but **before** any interceptor or pipe.
 
-#### 权限守卫(Authorization guard)
+#### Authorization guard
 
 As mentioned, **authorization** is a great use case for Guards because specific routes should be available only when the caller (usually a specific authenticated user) has sufficient permissions. The `AuthGuard` that we'll build now assumes an authenticated user (and that, therefore, a token is attached to the request headers). It will extract and validate the token, and use the extracted information to determine whether the request can proceed or not.
 
@@ -49,7 +49,7 @@ Every guard must implement a `canActivate()` function. This function should retu
 
 The `canActivate()` function takes a single argument, the `ExecutionContext` instance. The `ExecutionContext` inherits from `ArgumentsHost`. We saw `ArgumentsHost` before in the exception filters chapter. There, we saw that it's a wrapper around arguments that have been passed to the **original** handler, and contains different arguments arrays based on the type of the application. You can refer back to [the exception filters chapter](https://docs.nestjs.com/exception-filters#arguments-host) for more on this topic.
 
-#### 执行上下文(Execution context)
+#### Execution context
 
 By extending `ArgumentsHost`, `ExecutionContext` provides additional details about the current execution process. Here's what it looks like:
 
@@ -62,7 +62,7 @@ export interface ExecutionContext extends ArgumentsHost {
 
 The `getHandler()` method returns a reference to the handler about to be invoked. The `getClass()` method returns the type of the `Controller` class which this particular handler belongs to. For example, if the currently processed request is a `POST` request, destined for the `create()` method on the `CatsController`, `getHandler()` will return a reference to the `create()` method and `getClass()` will return a `CatsController` **type** (not instance).
 
-#### 基权限验证(Role-based authentication)
+#### Role-based authentication
 
 Let's build a more functional guard that permits access only to users with a specific role. We'll start with a basic guard template, and build on it in the coming sections. For now, it allows all requests to proceed:
 
@@ -90,7 +90,7 @@ export class RolesGuard {
 }
 ```
 
-#### 守卫绑定(Binding guards)
+#### Binding guards
 
 Like pipes and exception filters, guards can be **controller-scoped**, method-scoped, or global-scoped. Below, we set up a controller-scoped guard using the `@UseGuards()` decorator. This decorator may take a single argument, or a comma-separated list of arguments. This lets you easily apply the appropriate set of guards with one declaration.
 
@@ -147,7 +147,7 @@ export class ApplicationModule {}
 > where the guard (`RolesGuard` in the example above) is defined. Also, `useClass` is not the only way of dealing with
 > custom provider registration. Learn more [here](/fundamentals/custom-providers).
 
-#### 反射(Reflection)
+#### Reflection
 
 Our `RolesGuard` is working, but it's not very smart yet. We're not yet taking advantage of the most important guard feature - the **execution context**. It doesn't yet know about roles, or which roles are allowed for each handler. The `CatsController`, for example, could have different permission schemes for different routes. Some might be available only for an admin user, and others could be open for everyone. How can we match roles to routes in a flexible and reusable way?
 
@@ -202,7 +202,7 @@ async create(createCatDto) {
 }
 ```
 
-#### 聚合(Putting it all together)
+#### Putting it all together
 
 Let's now go back and tie this together with our `RolesGuard`. Currently, it simply returns `true` in all cases, allowing every request to proceed. We want to make the return value conditional based on the comparing the **roles assigned to the current user** to the actual roles required by the current route being processed. In order to access the route's role(s) (custom metadata), we'll use the `Reflector` helper class, which is provided out of the box by the framework and exposed from the `@nestjs/core` package.
 

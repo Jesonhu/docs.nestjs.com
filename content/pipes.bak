@@ -1,4 +1,4 @@
-### 管道(Pipes)
+### Pipes
 
 A pipe is a class annotated with the `@Injectable()` decorator. Pipes should implement the `PipeTransform` interface.
 
@@ -15,7 +15,7 @@ In both cases, pipes operate on the `arguments` being processed by a <a href="co
 
 > info **Hint** Pipes run inside the exceptions zone. This means that when a Pipe throws an exception it is handled by the exceptions layer (global exceptions filter and any [exceptions filters](/exception-filters) that are applied to the current context). Given the above, it should be clear that when an exception is thrown in a Pipe, no controller method is subsequently executed.
 
-#### 创建管道(Built-in pipes)
+#### Built-in pipes
 
 Nest comes with two pipes available right out-of-the-box: `ValidationPipe` and `ParseIntPipe`. They're exported from the `@nestjs/common` package. In order to better understand how they work, let's build them from scratch.
 
@@ -94,7 +94,7 @@ These properties describe the currently processed argument.
 
 > warning **Warning** TypeScript interfaces disappear during transpilation. Thus, if a method parameter's type is declared as an interface instead of a class, the `metatype` value will be `Object`.
 
-#### 验证器使用(Validation use case)
+#### Validation use case
 
 Let's take a closer look at the `create()` method of the `CatsController`.
 
@@ -126,7 +126,7 @@ We want to ensure that any incoming request to the create method contains a vali
 
 It turns out that this is a case ideally suited for a **Pipe**. So let's go ahead and build one.
 
-#### 对象规划验证(Object schema validation)
+#### Object schema validation
 
 There are several approaches available for object validation. One common approach is to use **schema-based** validation. The [Joi](https://github.com/hapijs/joi) library allows you to create schemas in a pretty straightforward way, with a readable API. Let's look at a pipe that makes use of Joi-based schemas.
 
@@ -173,7 +173,7 @@ export class JoiValidationPipe {
 }
 ```
 
-#### 管道绑定(Binding pipes)
+#### Binding pipes
 
 Binding pipes (tying them to the appropriate controller or handler) is very straightforward. We use the `@UsePipes()` decorator and create a pipe instance, passing it a Joi validation schema.
 
@@ -193,7 +193,7 @@ async create(createCatDto) {
 }
 ```
 
-#### 类验证器(Class validator)
+#### Class validator
 
 > warning **Warning** The techniques in this section require TypeScript, and are not available if your app is written using vanilla JavaScript.
 
@@ -338,7 +338,7 @@ export class ApplicationModule {}
 
 > info **Hint** When using this approach to perform dependency injection for the pipe, note that regardless of the module where this construction is employed, the pipe is, in fact, global. Where should this be done? Choose the module where the pipe (`ValidationPipe` in the example above) is defined. Also, `useClass` is not the only way of dealing with custom provider registration. Learn more [here](/fundamentals/custom-providers).
 
-#### 转化用例(Transformation use case)
+#### Transformation use case
 
 Validation isn't the sole use case for **Pipes**. At the beginning of this chapter, we mentioned that a pipe can also **transform** the input data to the desired output. This is possible because the value returned from the `transform` function completely overrides the previous value of the argument. When is this useful? Consider that sometimes the data passed from the client needs to undergo some change - for example converting a string to an integer - before it can be properly handled by the route handler method. Furthermore, some required data fields may be missing, and we would like to apply default values. **Transformer pipes** can perform these functions by interposing a processing function between the client request and the request handler.
 
@@ -409,7 +409,7 @@ findOne(userEntity) {
 
 We leave the implementation of this pipe to the reader, but note that like all other transformation pipes, it receives an input value (an `id`) and returns an output value (a `UserEntity` object). This can make your code more declarative and [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) by abstracting boilerplate code out of your handler and into a common pipe.
 
-#### 验证管道创建(The built-in ValidationPipe)
+#### The built-in ValidationPipe
 
 Fortunately, you don't have to build these pipes on your own since the `ValidationPipe` and the `ParseIntPipe` are provided by Nest out-of-the-box. (Keep in mind that `ValidationPipe` requires both `class-validator` and `class-transformer` packages to be installed).
 
